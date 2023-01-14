@@ -6,7 +6,9 @@ module.exports = mongoose => {
             lastName: String,
             phoneNumber: String,
             email: String,
-            createdDt: String
+            createdDt: String,
+            closestDistance: Number,
+            lastSeen: Date
         },
         {timestamps: true}
     );
@@ -16,6 +18,8 @@ module.exports = mongoose => {
         object.id = _id;
         return object;
     });
+
+    schema.index({ createdAt: 1 }, { expireAfterSeconds: 600 })
 
     return mongoose.model("pilot", schema);
 };

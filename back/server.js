@@ -1,23 +1,13 @@
-const express = require("express");
-const cors = require("cors");
-const db = require("./config/db.connection")
+const axios = require("axios");
+const {xml2json} = require("xml-js");
+const {updateTrespasserPilots} = require("./utils/updateTrespasserPilots");
 
-const app = express();
-
-const corsOptions = {
-    origin: "http://localhost:8081"
-};
-
-app.use(cors(corsOptions));
-
-db.dbConnect()
-
-app.use(express.json());
-
-require("./routes/pilot.routes")(app);
-require("./routes/drone.routes")(app);
-
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
-});
+exports.requestNewTrespasserPilots = () => {
+        axios.get(process.env.BASE_URL + "drones").then(async response => {
+                const dronesData = xml2json(response.data, {compact: true})
+                const lastSeen = JSON.parse(dronesData).report.capture._attributes.snapshotTimestamp
+                const drones = JSON.parse(dronesData).report.capture.drone
+                await updateTrespasserPilots(drones, lastSeen)
+            }
+        )
+}
