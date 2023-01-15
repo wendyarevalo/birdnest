@@ -8,7 +8,7 @@ function App() {
     const [pilots, setPilots] = useState([])
 
     useEffect(() => {
-        axios.get("http://localhost:8080/pilots")
+        axios.get("https://birdnest-api-wyae.onrender.com/pilots")
             .then(response => {
                 setPilots(response.data)
             })
