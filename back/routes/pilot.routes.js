@@ -3,7 +3,7 @@ module.exports = app => {
 
     const router = require("express").Router();
 
-    router.get("/pilots/getAll", pilots.getAll);
+    router.get("/pilots", pilots.getAll);
 
     app.use('/', router);
 }
